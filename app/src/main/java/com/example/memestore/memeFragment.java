@@ -1,20 +1,25 @@
 package com.example.memestore;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.memestore.general_classes.GetRawData;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link memeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class memeFragment extends Fragment {
+public class memeFragment extends Fragment implements GetRawData.OnRawDataDownloaded {
 
+    private static final String TAG = "memeFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -53,6 +58,9 @@ public class memeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        GetRawData getData = new GetRawData(this);
+        getData.execute("https://api.edamam.com/search?app_id=b8939818&app_key=42670557ef175c9e8735b976b0c48c85&q=pastry");
     }
 
     @Override
@@ -60,5 +68,11 @@ public class memeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_meme, container, false);
+    }
+
+    @Override
+    public void onRawDataDownloaded(String downloadedData) {
+        Log.d(TAG, "onRawDataDownloaded: Got the raw data");
+        Log.d(TAG, "onRawDataDownloaded: " + downloadedData);
     }
 }
