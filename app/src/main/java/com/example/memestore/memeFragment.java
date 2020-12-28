@@ -1,10 +1,13 @@
 package com.example.memestore;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.memestore.general_classes.GetPostList;
-import com.example.memestore.general_classes.GetRawData;
 import com.example.memestore.general_classes.Post;
+import com.example.memestore.general_classes.PostsRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
@@ -22,7 +25,7 @@ import java.util.ArrayList;
  * Use the {@link memeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class memeFragment extends Fragment implements GetRawData.OnRawDataDownloaded, GetPostList.OnListAvailable {
+public class memeFragment extends Fragment implements GetPostList.OnListAvailable {
 
     private static final String TAG = "memeFragment";
     // TODO: Rename parameter arguments, choose names that match
@@ -30,13 +33,16 @@ public class memeFragment extends Fragment implements GetRawData.OnRawDataDownlo
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static Context mContext;
+    private RecyclerView mRecyclerView;
+    private ArrayList<Post> mPosts = null;
+    private PostsRecyclerViewAdapter mPostsRecyclerViewAdapter;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     public memeFragment(Context context) {
         // Required empty public constructor
-        mContext=context;
+        mContext = context;
     }
 
     /**
@@ -65,10 +71,8 @@ public class memeFragment extends Fragment implements GetRawData.OnRawDataDownlo
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-//        GetRawData getData = new GetRawData(this);
-//        getData.execute("https://api.edamam.com/search?app_id=b8939818&app_key=42670557ef175c9e8735b976b0c48c85&q=pastry");
-        GetPostList getPostList=new GetPostList(this);
-        getPostList.execute("https://api.edamam.com/search?app_id=b8939818&app_key=42670557ef175c9e8735b976b0c48c85&q=pastry");
+        GetPostList getPostList = new GetPostList(this);
+        getPostList.execute("http://alpha-meme-maker.herokuapp.com/");
     }
 
     @Override
@@ -79,13 +83,23 @@ public class memeFragment extends Fragment implements GetRawData.OnRawDataDownlo
     }
 
     @Override
-    public void onRawDataDownloaded(String downloadedData) {
-        Log.d(TAG, "onRawDataDownloaded: Got the raw data");
-        Log.d(TAG, "onRawDataDownloaded: " + downloadedData);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mRecyclerView = view.findViewById(R.id.meme_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mPostsRecyclerViewAdapter = new PostsRecyclerViewAdapter(mPosts,R.layout.post,getContext());
+        mRecyclerView.setAdapter(mPostsRecyclerViewAdapter);
     }
 
     @Override
     public void onListAvailable(ArrayList<Post> posts) {
-        Log.d(TAG, "onListAvailable: Posts:"+posts);
+        Log.d(TAG, "onListAvailable: Got the post list");
+        Log.d(TAG, "onListAvailable: Posts:" + posts);
+
+        if(posts != null)
+        {
+            mPosts = posts;
+            mPostsRecyclerViewAdapter.loadData(mPosts);
+        }
     }
 }
