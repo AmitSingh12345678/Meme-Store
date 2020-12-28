@@ -10,11 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-enum RawDataDownloadStatus {IDLE , NOT_INITIALIZED, OK, FAILED, PROCESSING}
-
 public class GetRawData extends AsyncTask<String, Void, String> {
     private static final String TAG = "GetRawData";
-    RawDataDownloadStatus status;
     OnRawDataDownloaded mCallback;
 
     public interface OnRawDataDownloaded{
@@ -23,7 +20,6 @@ public class GetRawData extends AsyncTask<String, Void, String> {
 
     public GetRawData(OnRawDataDownloaded callback) {
         mCallback = callback;
-        status = RawDataDownloadStatus.IDLE;
     }
 
     @Override
@@ -45,7 +41,6 @@ public class GetRawData extends AsyncTask<String, Void, String> {
             String loadedData = downloadData(urlPath);
             return loadedData;
         }else{
-            status = RawDataDownloadStatus.NOT_INITIALIZED;
             return null;
         }
     }
@@ -63,7 +58,6 @@ public class GetRawData extends AsyncTask<String, Void, String> {
         BufferedReader reader = null;
 
         try{
-            status = RawDataDownloadStatus.PROCESSING;
             StringBuilder dataBuilder = new StringBuilder();
             URL url = new URL(urlPath);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -77,7 +71,6 @@ public class GetRawData extends AsyncTask<String, Void, String> {
                 dataBuilder.append(line).append('\n');
             }
 
-            status = RawDataDownloadStatus.OK;
             return dataBuilder.toString();
 
         }catch(MalformedURLException me){
@@ -94,7 +87,6 @@ public class GetRawData extends AsyncTask<String, Void, String> {
             }
         }
 
-        status = RawDataDownloadStatus.FAILED;
         return null;
     }
 }
