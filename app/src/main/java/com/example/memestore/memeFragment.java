@@ -2,17 +2,16 @@ package com.example.memestore;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.memestore.general_classes.GetPostList;
 import com.example.memestore.general_classes.Post;
@@ -71,8 +70,8 @@ public class memeFragment extends Fragment implements GetPostList.OnListAvailabl
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        GetPostList getPostList = new GetPostList(this);
-        getPostList.execute("http://alpha-meme-maker.herokuapp.com/");
+//        GetPostList getPostList = new GetPostList(this);
+//        getPostList.execute("http://alpha-meme-maker.herokuapp.com/");
     }
 
     @Override
@@ -89,6 +88,9 @@ public class memeFragment extends Fragment implements GetPostList.OnListAvailabl
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mPostsRecyclerViewAdapter = new PostsRecyclerViewAdapter(mPosts,R.layout.post,getContext());
         mRecyclerView.setAdapter(mPostsRecyclerViewAdapter);
+
+        GetPostList getPostList = new GetPostList(this);
+        getPostList.execute("http://alpha-meme-maker.herokuapp.com/");
     }
 
     @Override

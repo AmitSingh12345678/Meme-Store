@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private static final String TAG = "PostsRecyclerViewAdapte";
@@ -48,6 +47,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
 
     public void loadData(ArrayList<Post> posts){
         Log.d(TAG, "loadData: Loading new Posts");
+        this.posts=posts;
         notifyDataSetChanged();
     }
 }
