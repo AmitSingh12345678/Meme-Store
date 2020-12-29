@@ -29,6 +29,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post requiredPost = posts.get(position);
         holder.postAuthorName.setText(requiredPost.getPostAuthorName());
+        holder.postName.setText(requiredPost.getPostName());
         Picasso.get().load(requiredPost.getPostAuthorImageUrl()).into(holder.postAuthorImage);
         Picasso.get().load(requiredPost.getPostImageUrl()).into(holder.postImage);
     }

@@ -75,6 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/post_image"
+                    android:minHeight="200dp"
                     android:scaleType="centerCrop"
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
@@ -85,9 +86,9 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
                     android:fontFamily="sans-serif"
-                    android:text="Haha,this is funny!!"
                     android:textColor="@color/design_default_color_on_secondary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:text="Haha, this is funny!" />
             </LinearLayout>
 
             <LinearLayout

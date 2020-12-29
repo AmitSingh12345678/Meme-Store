@@ -13,11 +13,13 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
     public ImageView postAuthorImage;
     public TextView postAuthorName;
     public ImageView postImage;
+    public TextView postName;
 
     public PostViewHolder(@NonNull View itemView) {
         super(itemView);
         postAuthorImage = itemView.findViewById(R.id.post_author_image);
         postAuthorName = itemView.findViewById(R.id.post_author_name);
         postImage = itemView.findViewById(R.id.post_image);
+        postName = itemView.findViewById(R.id.caption);
     }
 }
