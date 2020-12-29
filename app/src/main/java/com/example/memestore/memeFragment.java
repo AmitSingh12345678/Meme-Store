@@ -68,7 +68,7 @@ public class memeFragment extends Fragment implements GetRawData.OnRawDataDownlo
 //        GetRawData getData = new GetRawData(this);
 //        getData.execute("https://api.edamam.com/search?app_id=b8939818&app_key=42670557ef175c9e8735b976b0c48c85&q=pastry");
         GetPostList getPostList=new GetPostList(this);
-        getPostList.execute("https://api.edamam.com/search?app_id=b8939818&app_key=42670557ef175c9e8735b976b0c48c85&q=pastry");
+        getPostList.execute("http://alpha-meme-maker.herokuapp.com/");
     }
 
     @Override
