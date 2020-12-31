@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "326366711120",
+    "project_id": "meme-store-5ab2d",
+    "storage_bucket": "meme-store-5ab2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326366711120:android:c012a6baebd92146103055",
+        "android_client_info": {
+          "package_name": "com.example.memestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "326366711120-sgemnv1ucm0m79ia1ov9e8qjg59kfhv2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.memestore",
+            "certificate_hash": "33b715aab460998bde422271e1e41d3a970e82ec"
+          }
+        },
+        {
+          "client_id": "326366711120-aqhqubq9mtf0ee98l6m6ocao945bk943.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTqtsOcCbfasYBQUKVp02xW_5TVTNkfbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "326366711120-aqhqubq9mtf0ee98l6m6ocao945bk943.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
