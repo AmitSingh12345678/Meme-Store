@@ -94,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
             Log.d(TAG, "onActivityResult: Successfully picked an image with URI: " + data.getData());
+            Intent intent = new Intent(MainActivity.this,UploadPostActivity.class);
+            intent.putExtra("imageUri",data.getData().toString());
+            startActivity(intent);
         }else{
             Toast.makeText(this,"Error Opening Image",Toast.LENGTH_SHORT).show();
         }
