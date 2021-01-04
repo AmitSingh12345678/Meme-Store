@@ -10,4 +10,6 @@
     <string name="like_btn">Like</string>
     <string name="comment_btn">Comment</string>
     <string name="send_btn">Send</string>
+    <string name="plus_btn">create a post</string>
+    <string name="gallery_image">Gallery Image</string>
 </resources>
