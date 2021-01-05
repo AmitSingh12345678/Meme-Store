@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.memestore.general_classes.GetDataBasePosts;
 import com.example.memestore.general_classes.GetPostList;
 import com.example.memestore.general_classes.Post;
 import com.example.memestore.general_classes.PostsRecyclerViewAdapter;
@@ -89,8 +90,11 @@ public class memeFragment extends Fragment implements GetPostList.OnListAvailabl
         mPostsRecyclerViewAdapter = new PostsRecyclerViewAdapter(mPosts,R.layout.post,getContext());
         mRecyclerView.setAdapter(mPostsRecyclerViewAdapter);
 
-        GetPostList getPostList = new GetPostList(this);
-        getPostList.execute("http://alpha-meme-maker.herokuapp.com/");
+//        GetPostList getPostList = new GetPostList(this);
+//        getPostList.execute("http://alpha-meme-maker.herokuapp.com/");
+
+        GetDataBasePosts getDataBasePosts = new GetDataBasePosts(getContext(),this);
+        getDataBasePosts.getPosts();
     }
 
     @Override

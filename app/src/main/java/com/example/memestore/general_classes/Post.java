@@ -10,6 +10,15 @@ public class Post {
     private String postName;
     private int likes = 50;
 
+    public Post(){
+        //Empty Constructor needed
+    }
+
+    public Post(String post_name,String post_image_url){
+        postName = post_name;
+        postImageUrl = post_image_url;
+    }
+
     public String getPostAuthorName() {
         return postAuthorName;
     }

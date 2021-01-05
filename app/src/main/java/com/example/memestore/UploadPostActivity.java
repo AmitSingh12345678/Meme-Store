@@ -53,8 +53,8 @@ public class UploadPostActivity extends AppCompatActivity {
         post_image = findViewById(R.id.selectedPic);
         post_caption = findViewById(R.id.uploadPostCaption);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("Posts");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Posts");
+        mStorageRef = FirebaseStorage.getInstance().getReference("Memes");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Memes");
 
         final String postImageUri = getIntent().getStringExtra("imageUri");
 
@@ -90,7 +90,7 @@ public class UploadPostActivity extends AppCompatActivity {
             String caption=post_caption.getText().toString();
             Uri imageUri=Uri.parse(postImageUri);
             final String key= UUID.randomUUID().toString();
-            mDatabaseRef.child(key).child("Post Caption").setValue(caption);
+            mDatabaseRef.child(key).child("postName").setValue(caption);
             StorageReference postImageRef=mStorageRef.child(key).child(System.currentTimeMillis()
                     + "." + getFileExtension(imageUri));
             mUploadTask = postImageRef.putFile(imageUri)
@@ -99,7 +99,7 @@ public class UploadPostActivity extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(UploadPostActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
                             String downloadUrl=taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-                            mDatabaseRef.child(key).child("imageUrl").setValue(downloadUrl);
+                            mDatabaseRef.child(key).child("postImageUrl").setValue(downloadUrl);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
