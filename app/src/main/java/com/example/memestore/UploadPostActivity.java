@@ -91,15 +91,30 @@ public class UploadPostActivity extends AppCompatActivity {
             Uri imageUri=Uri.parse(postImageUri);
             final String key= UUID.randomUUID().toString();
             mDatabaseRef.child(key).child("postName").setValue(caption);
-            StorageReference postImageRef=mStorageRef.child(key).child(System.currentTimeMillis()
-                    + "." + getFileExtension(imageUri));
+            final String imageName=System.currentTimeMillis()
+                    + "." + getFileExtension(imageUri);
+            Log.d(TAG, "uploadPost: Key is "+key);
+            Log.d(TAG, "uploadPost: Image name is "+imageName);
+            StorageReference postImageRef=mStorageRef.child(key).child(imageName);
             mUploadTask = postImageRef.putFile(imageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(UploadPostActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
-                            String downloadUrl=taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-                            mDatabaseRef.child(key).child("postImageUrl").setValue(downloadUrl);
+                            mStorageRef.child(key+"/"+imageName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String downloadUrl= uri.toString();
+                                    Log.d(TAG, "onSuccess: Image Url is "+downloadUrl);
+                                    mDatabaseRef.child(key).child("postImageUrl").setValue(downloadUrl);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "onFailure: Error while getting image url!! "+e.getMessage());
+                                }
+                            });
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

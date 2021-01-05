@@ -29,7 +29,7 @@ public class GetDataBasePosts {
 
     public void getPosts(){
         mPosts = new ArrayList<>();
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
