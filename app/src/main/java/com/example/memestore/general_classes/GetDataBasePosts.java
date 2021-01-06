@@ -28,11 +28,12 @@ public class GetDataBasePosts {
     }
 
     public void getPosts(){
-        mPosts = new ArrayList<>();
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mPosts = new ArrayList<>();
                 for(DataSnapshot postSnapShot: snapshot.getChildren()){
                     Post post = postSnapShot.getValue(Post.class);
                     Log.d(TAG, "onDataChange: Adding the post: " + post.toString());

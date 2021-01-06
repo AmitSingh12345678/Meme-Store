@@ -68,12 +68,16 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser(final String username, String email, String password) {
-        auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+        auth.createUserWithEmailAndPassword(email,password)
+                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                    FirebaseDatabase.getInstance().getReference("Users").child(auth.getCurrentUser().getUid()).setValue(username).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<Void>() {
+                    FirebaseDatabase.getInstance().getReference("Users")
+                            .child(auth.getCurrentUser().getUid())
+                            .child("userName").setValue(username)
+                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful())
