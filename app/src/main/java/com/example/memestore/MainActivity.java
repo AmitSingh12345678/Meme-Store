@@ -1,30 +1,40 @@
 package com.example.memestore;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.annotation.LongDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.ViewPager;
+
+import com.example.memestore.general_classes.User;
 import com.example.memestore.ui.main.SectionsPagerAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -35,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private final int PICK_IMAGE_REQUEST = 1;
     private final int PICK_USER_IMAGE_REQUEST = 2;
     private ImageView userImage;
+    private TextView userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +60,15 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbar();
         navigationView=findViewById(R.id.navigation_menu);
         userImage = navigationView.getHeaderView(0).findViewById(R.id.userImage);
+        userName=navigationView.getHeaderView(0).findViewById(R.id.userName);
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openPhotoPicker(PICK_USER_IMAGE_REQUEST);
             }
         });
+
+        addEventListenerToUserDetails();
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -118,10 +132,71 @@ public class MainActivity extends AppCompatActivity {
                 case PICK_USER_IMAGE_REQUEST:
                     Log.d(TAG, "onActivityResult: Called with request Code: " + PICK_USER_IMAGE_REQUEST);
                     Log.d(TAG, "onActivityResult: Successfully Picked an image with URI: " + data.getData());
-                    Toast.makeText(this,"Enter code to upload image",Toast.LENGTH_SHORT).show();
+                    Uri profileImgUri=data.getData();
+                    final DatabaseReference userDatabaseReference= FirebaseDatabase.getInstance().getReference("Users");
+                    final StorageReference userStorageReference=FirebaseStorage.getInstance().getReference("Users");
+                    final String userUID=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        userStorageReference.child(userUID)
+                                .child("profile-pic")
+                                .putFile(profileImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Log.d(TAG, "onSuccess: Profile Pic updated successfully");
+                                    userStorageReference.child(userUID+"/profile-pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                           String downloadUrl=uri.toString();
+                                            Log.d(TAG, "onSuccess: Image url is "+downloadUrl);
+                                            Picasso.get().load(downloadUrl).into(userImage);
+                                            userDatabaseReference.child(userUID).child("userProfilePic").setValue(downloadUrl);
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "onFailure: Error: "+e.getMessage());
+                                        }
+                                    });
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "onFailure: Error while changing profile pic!!");
+                            }
+                        });
             }
         }else{
             Toast.makeText(this,"Error Opening Image",Toast.LENGTH_SHORT).show();
         }
+    }
+    public void addEventListenerToUserDetails(){
+
+        final String authorUid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDatabase.getInstance().getReference("Users/"+ authorUid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                FirebaseDatabase.getInstance().getReference("Users").child(authorUid).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Log.d(TAG, "onDataChange: Called");
+                        User user = snapshot.getValue(User.class);
+                        Log.d(TAG, "onDataChange: Post Author Name: " + user.getUserName());
+                        Log.d(TAG, "onDataChange: Profile Pic Url: "+user.getUserProfilePic());
+                        Picasso.get().load(user.getUserProfilePic()).into(userImage);
+                        userName.setText(user.getUserName());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "onCancelled: "+error.getMessage());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this,error.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

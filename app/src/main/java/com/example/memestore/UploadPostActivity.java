@@ -16,6 +16,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.memestore.general_classes.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -101,18 +102,17 @@ public class UploadPostActivity extends AppCompatActivity {
 
             //Setting the post author name from the user UID
             String authorUid = auth.getCurrentUser().getUid();
-            mUserDatabaseRef.child(authorUid).child("userName").addValueEventListener(new ValueEventListener() {
+            mUserDatabaseRef.child(authorUid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.d(TAG, "onDataChange: Called");
-                    String authorName = snapshot.getValue(String.class);
-                    Log.d(TAG, "onDataChange: Post Author Name: " + authorName);
-                    mDatabaseRef.child(key).child("postAuthorName").setValue(authorName);
+                    User user=snapshot.getValue(User.class);
+                    mDatabaseRef.child(key).child("postAuthorName").setValue(user.getUserName());
+                    mDatabaseRef.child(key).child("postAuthorImageUrl").setValue(user.getUserProfilePic());
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e(TAG, "onCancelled: "+error.getMessage());
+                    Log.d(TAG, "onCancelled: Error!! "+error.getMessage());
                 }
             });
 
