@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class GetDataBasePosts {
     private static final String TAG = "GetDataBasePosts";
-    private ArrayList<Post> mPosts;
+//    private ArrayList<Post> mPosts;
     private GetPostList.OnListAvailable mCallback;
     private DatabaseReference mDatabaseRef;
     private Context mContext;
@@ -28,11 +28,12 @@ public class GetDataBasePosts {
     }
 
     public void getPosts(){
-        mPosts = new ArrayList<>();
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        Log.d(TAG, "getPosts: Called");
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Post> mPosts=new ArrayList<>();
                 for(DataSnapshot postSnapShot: snapshot.getChildren()){
                     Post post = postSnapShot.getValue(Post.class);
                     Log.d(TAG, "onDataChange: Adding the post: " + post.toString());

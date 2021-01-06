@@ -76,7 +76,6 @@ public class UploadPostActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: Caption: " + post_caption.getText().toString());
                 uploadPost(postImageUri);
                 Toast.makeText(UploadPostActivity.this,"Posted Successfully",Toast.LENGTH_SHORT).show();
-                finish();
             }
         });
     }
@@ -132,6 +131,7 @@ public class UploadPostActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
+        finish();
     }
 
 }
