@@ -18,8 +18,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -37,6 +41,8 @@ public class UploadPostActivity extends AppCompatActivity {
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
+    private FirebaseAuth auth;
+    private DatabaseReference mUserDatabaseRef;
 
     private StorageTask mUploadTask;
     @Override
@@ -55,6 +61,8 @@ public class UploadPostActivity extends AppCompatActivity {
 
         mStorageRef = FirebaseStorage.getInstance().getReference("Memes");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Memes");
+        mUserDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
+        auth = FirebaseAuth.getInstance();
 
         final String postImageUri = getIntent().getStringExtra("imageUri");
 
@@ -90,6 +98,24 @@ public class UploadPostActivity extends AppCompatActivity {
             Uri imageUri=Uri.parse(postImageUri);
             final String key= UUID.randomUUID().toString();
             mDatabaseRef.child(key).child("postName").setValue(caption);
+
+            //Setting the post author name from the user UID
+            String authorUid = auth.getCurrentUser().getUid();
+            mUserDatabaseRef.child(authorUid).child("userName").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.d(TAG, "onDataChange: Called");
+                    String authorName = snapshot.getValue(String.class);
+                    Log.d(TAG, "onDataChange: Post Author Name: " + authorName);
+                    mDatabaseRef.child(key).child("postAuthorName").setValue(authorName);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e(TAG, "onCancelled: "+error.getMessage());
+                }
+            });
+
             final String imageName=System.currentTimeMillis()
                     + "." + getFileExtension(imageUri);
             Log.d(TAG, "uploadPost: Key is "+key);

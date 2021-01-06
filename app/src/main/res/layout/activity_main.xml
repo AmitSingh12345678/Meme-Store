@@ -48,13 +48,14 @@
         android:contentDescription="@string/plus_btn"
         app:srcCompat="@drawable/plus_white_2x" />
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/navigation_menu"
         android:layout_gravity="start"
-        app:menu="@menu/menu"
-        app:headerLayout="@layout/header">
+        app:headerLayout="@layout/header"
+        app:menu="@menu/menu">
 
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>
