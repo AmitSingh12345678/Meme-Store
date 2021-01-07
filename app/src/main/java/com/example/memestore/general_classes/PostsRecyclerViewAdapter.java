@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,18 +31,34 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
-        Post requiredPost = posts.get(position);
-        holder.postAuthorName.setText(requiredPost.getPostAuthorName());
+    public void onBindViewHolder(@NonNull final PostViewHolder holder, int position) {
+        final Post requiredPost = posts.get(position);
+        String authorUID = requiredPost.getUserUID();
+        DatabaseReference userDatabaseRef = FirebaseDatabase.getInstance().getReference("Users/" + authorUID);
+        userDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d(TAG, "onDataChange: Called");
+                User user = snapshot.getValue(User.class);
+                if (user != null) {
+                    holder.postAuthorName.setText(user.getUserName());
+                    Picasso.get().load(user.getUserProfilePic()).into(holder.postAuthorImage);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "onCancelled: Error " + error.getMessage());
+            }
+        });
         holder.postName.setText(requiredPost.getPostName());
-        Picasso.get().load(requiredPost.getPostAuthorImageUrl()).into(holder.postAuthorImage);
         Picasso.get().load(requiredPost.getPostImageUrl()).into(holder.postImage);
     }
 
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View createdView = LayoutInflater.from(mContext).inflate(layoutResource,parent,false);
+        View createdView = LayoutInflater.from(mContext).inflate(layoutResource, parent, false);
         return new PostViewHolder(createdView);
     }
 
@@ -46,9 +67,9 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
         return (posts != null ? posts.size() : 0);
     }
 
-    public void loadData(ArrayList<Post> posts){
+    public void loadData(ArrayList<Post> posts) {
         Log.d(TAG, "loadData: Loading new Posts");
-        this.posts=posts;
+        this.posts = posts;
         notifyDataSetChanged();
     }
 }
