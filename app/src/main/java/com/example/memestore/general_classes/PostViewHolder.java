@@ -17,6 +17,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
     public TextView postName;
     public ImageButton likeButton;
     public TextView likesCount;
+    public ImageButton downloadButton;
 
     public PostViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -26,5 +27,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         postName = itemView.findViewById(R.id.caption);
         likeButton = itemView.findViewById(R.id.like_btn);
         likesCount = itemView.findViewById(R.id.likesCountView);
+        downloadButton=itemView.findViewById(R.id.download_btn);
     }
 }

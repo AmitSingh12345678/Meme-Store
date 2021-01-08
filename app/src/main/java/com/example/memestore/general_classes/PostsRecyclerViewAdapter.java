@@ -1,13 +1,16 @@
 package com.example.memestore.general_classes;
 
 import android.content.Context;
-import android.media.Image;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +24,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
@@ -28,6 +36,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
     private ArrayList<Post> posts = null;
     private final int layoutResource;
     private final Context mContext;
+    private OutputStream outputStream=null ;
 
     public PostsRecyclerViewAdapter(ArrayList<Post> posts, int resource, Context context) {
         this.posts = posts;
@@ -36,8 +45,9 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final PostViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final PostViewHolder holder, final int position) {
         final Post requiredPost = posts.get(position);
+        final String[] postImageUri = {null};
         String authorUID = requiredPost.getUserUID();
         DatabaseReference userDatabaseRef = FirebaseDatabase.getInstance().getReference("Users/" + authorUID);
         userDatabaseRef.addValueEventListener(new ValueEventListener() {
@@ -46,6 +56,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
                 Log.d(TAG, "onDataChange: Called");
                 User user = snapshot.getValue(User.class);
                 if (user != null) {
+                    postImageUri[0] =user.getUserProfilePic();
                     holder.postAuthorName.setText(user.getUserName());
                     Picasso.get().load(user.getUserProfilePic()).into(holder.postAuthorImage);
                 }
@@ -56,6 +67,46 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
                 Log.e(TAG, "onCancelled: Error " + error.getMessage());
             }
         });
+
+        holder.downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BitmapDrawable bitmapDrawable= (BitmapDrawable) holder.postImage.getDrawable();
+                Bitmap bitmap=null;
+                if(bitmapDrawable!=null) {
+                     bitmap = bitmapDrawable.getBitmap();
+                }else{
+                    Log.d(TAG, "onClick: Error!!!!!!!!!!!");
+                    return;
+                }
+                File filepath= Environment.getExternalStorageDirectory();
+                File dir=new File(filepath.getAbsolutePath()+"/MemeStore/");
+                Log.d(TAG, "onClick: "+filepath.getAbsolutePath()+"/MemeStore/");
+                dir.mkdir();
+                File file=new File(dir,System.currentTimeMillis()+".jpg");
+                try {
+                    outputStream=new FileOutputStream(file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if(bitmap!=null && outputStream!=null) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                    Toast.makeText(mContext, "Image Saved!!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Log.d(TAG, "onClick: Error");
+                    Toast.makeText(mContext, "Error while downloading image", Toast.LENGTH_SHORT).show();
+                }
+                if(outputStream!=null) {
+                    try {
+                        outputStream.flush();
+                        outputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
         holder.postName.setText(requiredPost.getPostName());
         isPostLiked(requiredPost.getPostId(),holder.likeButton);
         getLikesCount(requiredPost.getPostId(),holder.likesCount);
