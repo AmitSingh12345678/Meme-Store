@@ -36,6 +36,7 @@ public class GetDataBasePosts {
                 mPosts = new ArrayList<>();
                 for(DataSnapshot postSnapShot: snapshot.getChildren()){
                     Post post = postSnapShot.getValue(Post.class);
+                    post.setPostId(postSnapShot.getKey());
                     Log.d(TAG, "onDataChange: Adding the post: " + post.toString());
                     mPosts.add(post);
                 }

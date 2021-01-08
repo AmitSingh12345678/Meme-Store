@@ -1,6 +1,7 @@
 package com.example.memestore.general_classes;
 
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,8 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
     public TextView postAuthorName;
     public ImageView postImage;
     public TextView postName;
+    public ImageButton likeButton;
+    public TextView likesCount;
 
     public PostViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -21,5 +24,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         postAuthorName = itemView.findViewById(R.id.post_author_name);
         postImage = itemView.findViewById(R.id.post_image);
         postName = itemView.findViewById(R.id.caption);
+        likeButton = itemView.findViewById(R.id.like_btn);
+        likesCount = itemView.findViewById(R.id.likesCountView);
     }
 }

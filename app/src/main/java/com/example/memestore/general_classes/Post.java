@@ -4,10 +4,12 @@ public class Post {
 //    private String postAuthorName = "Meme Bot";
 //    private String postAuthorImageUrl = "https://www.thespruce.com/thmb/kPFArxxQPDx6o4vXjeORPx6HZDc=/2119x1192/smart/filters:no_upscale()/GettyImages-971582964-ee0f28aa66b04fb1a54171fa4bdee7a6.jpg";
     private String userUID;
+    private String postId;
     private String postImageUrl;
     private String postTags;
     private String postName;
-    private int likes = 50;
+    private int likesCount = 50;
+    private boolean isLiked = false;
 
     public String getUserUID() {
         return userUID;
@@ -35,12 +37,12 @@ public class Post {
         this.postImageUrl = postImageUrl;
     }
 
-    public int getLikes() {
-        return likes;
+    public int getLikesCount() {
+        return likesCount;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
+    public void setLikesCount(int likesCount) {
+        this.likesCount = likesCount;
     }
 
     public String getPostTags() {
@@ -58,6 +60,15 @@ public class Post {
     public void setPostName(String postName) {
         this.postName = postName;
     }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -65,9 +76,15 @@ public class Post {
                 ", postImageUrl='" + postImageUrl + '\'' +
                 ", postTags='" + postTags + '\'' +
                 ", postName='" + postName + '\'' +
-                ", likes=" + likes +
+                ", likes=" + likesCount +
                 '}';
     }
 
+    public String getPostId() {
+        return postId;
+    }
 
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
 }
