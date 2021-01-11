@@ -122,13 +122,13 @@
                 <ImageButton
                     android:id="@+id/download_btn"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:backgroundTint="#fff"
                     android:contentDescription="@string/send_btn"
 
                     android:tint="#040404"
-                    app:srcCompat="@android:drawable/stat_sys_download" />
+                    app:srcCompat="@drawable/save" />
             </LinearLayout>
 
             <TextView
