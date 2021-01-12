@@ -1,7 +1,6 @@
 package com.example.memestore.general_classes;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -94,7 +93,9 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, shareImageUri);
-                shareIntent.setType("image/jpeg");
+                shareIntent.putExtra(Intent.EXTRA_TEXT,"Shared from MemeStore");
+                shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                shareIntent.setType("*/*");
                 mContext.startActivity(Intent.createChooser(shareIntent,"Share via"));
             }
         });
