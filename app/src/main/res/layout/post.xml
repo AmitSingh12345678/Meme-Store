@@ -79,32 +79,42 @@
 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/post_image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="#000">
 
                 <ImageView
                     android:id="@+id/post_image"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:contentDescription="@string/post_image"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="400dp"
                     android:minHeight="200dp"
-                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/post_image"
+                    app:layout_constraintDimensionRatio="16:9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/caption"
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
                 <TextView
                     android:id="@+id/caption"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
+                    android:textAlignment="textStart"
+                    android:background="#fff"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/design_default_color_on_secondary"
                     android:textSize="14sp"
+                    android:paddingStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/post_image"
+                    app:layout_constraintTop_toBottomOf="@id/post_image"
                     tools:text="Haha, this is funny!" />
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/post_review_bar"
