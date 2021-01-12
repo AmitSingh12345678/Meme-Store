@@ -8,6 +8,7 @@ public class Post {
     private String postImageUrl;
     private String postTags;
     private String postName;
+    private String postUploadDate;
     private int likesCount = 50;
     private boolean isLiked = false;
 
@@ -24,7 +25,15 @@ public class Post {
         //Empty Constructor needed
     }
 
-    public Post(String post_name,String post_image_url){
+    public String getPostUploadDate() {
+        return postUploadDate;
+    }
+
+    public void setPostUploadDate(String postUploadDate) {
+        this.postUploadDate = postUploadDate;
+    }
+
+    public Post(String post_name, String post_image_url){
         postName = post_name;
         postImageUrl = post_image_url;
     }

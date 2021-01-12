@@ -24,7 +24,6 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.memestore.BuildConfig;
-import com.example.memestore.MainActivity;
 import com.example.memestore.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -58,6 +57,9 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
     public void onBindViewHolder(@NonNull final PostViewHolder holder, final int position) {
         final Post requiredPost = posts.get(position);
         final String[] postImageUri = {null};
+        if(requiredPost!=null)
+        holder.postUploadDate.setText(requiredPost.getPostUploadDate());
+
         String authorUID = requiredPost.getUserUID();
         DatabaseReference userDatabaseRef = FirebaseDatabase.getInstance().getReference("Users/" + authorUID);
         userDatabaseRef.addValueEventListener(new ValueEventListener() {

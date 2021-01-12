@@ -61,7 +61,7 @@
                     android:id="@+id/post_author_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="start"
                     android:fontFamily="sans-serif-condensed-light"
                     android:textColor="@color/design_default_color_on_secondary"
                     android:textSize="14sp"
@@ -71,8 +71,7 @@
         android:id="@+id/post_upload_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-
+        android:layout_gravity="start"
         android:fontFamily="sans-serif-condensed-light"
         android:textColor="@color/design_default_color_on_secondary"
         android:textSize="10sp"

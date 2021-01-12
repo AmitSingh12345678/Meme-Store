@@ -28,6 +28,8 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class UploadPostActivity extends AppCompatActivity {
@@ -94,6 +96,10 @@ public class UploadPostActivity extends AppCompatActivity {
             String caption=post_caption.getText().toString();
             Uri imageUri=Uri.parse(postImageUri);
             final String key= UUID.randomUUID().toString();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm yyyy.MM.dd");
+            String currentDateandTime = sdf.format(new Date());
+            mDatabaseRef.child(key).child("postUploadDate").setValue(currentDateandTime);
+
             mDatabaseRef.child(key).child("postName").setValue(caption);
 
             //Setting the post author name from the user UID
