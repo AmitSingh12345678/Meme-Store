@@ -46,11 +46,13 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
     private final int layoutResource;
     private final Context mContext;
     private OutputStream outputStream=null ;
+    private String postType;
 
-    public PostsRecyclerViewAdapter(ArrayList<Post> posts, int resource, Context context) {
+    public PostsRecyclerViewAdapter(ArrayList<Post> posts, int resource, Context context,String postType) {
         this.posts = posts;
         layoutResource = resource;
         mContext = context;
+        this.postType = postType;
     }
 
     @Override
@@ -110,10 +112,10 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
             @Override
             public void onClick(View v) {
                if(v.getTag().equals("like")){
-                   FirebaseDatabase.getInstance().getReference("Memes").child(requiredPost.getPostId())
+                   FirebaseDatabase.getInstance().getReference(postType).child(requiredPost.getPostId())
                            .child("likes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(true);
                }else{
-                   FirebaseDatabase.getInstance().getReference("Memes").child(requiredPost.getPostId())
+                   FirebaseDatabase.getInstance().getReference(postType).child(requiredPost.getPostId())
                            .child("likes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeValue();
                }
             }
@@ -143,7 +145,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
     void isPostLiked(final String postId, final ImageButton imageButton){
         final FirebaseAuth auth = FirebaseAuth.getInstance();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Memes")
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(postType)
                 .child(postId).child("likes");
 
         ref.addValueEventListener(new ValueEventListener() {
@@ -168,7 +170,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
     }
 
     void getLikesCount(final String postId, final TextView likesCountView){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Memes").child(postId).child("likes");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(postType).child(postId).child("likes");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -200,7 +202,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
         }
 
         //Check condition
-        if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED){
             //If permission granted
             File filepath= Environment.getExternalStorageDirectory();

@@ -42,6 +42,7 @@ public class UploadPostActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private FirebaseAuth auth;
     private DatabaseReference mUserDatabaseRef;
+    private String postDatabasePath;
 
     private StorageTask mUploadTask;
     @Override
@@ -58,12 +59,14 @@ public class UploadPostActivity extends AppCompatActivity {
         post_image = findViewById(R.id.selectedPic);
         post_caption = findViewById(R.id.uploadPostCaption);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("Memes");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Memes");
         mUserDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
         auth = FirebaseAuth.getInstance();
 
         final String postImageUri = getIntent().getStringExtra("imageUri");
+        postDatabasePath = getIntent().getStringExtra("PATH");
+
+        mStorageRef = FirebaseStorage.getInstance().getReference(postDatabasePath);
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference(postDatabasePath);
 
         if(postImageUri != null){
             Log.d(TAG, "onCreate: Viewing image with URI: " + postImageUri);

@@ -37,6 +37,7 @@ public class memeFragment extends Fragment implements GetPostList.OnListAvailabl
     private RecyclerView mRecyclerView;
     private ArrayList<Post> mPosts = null;
     private PostsRecyclerViewAdapter mPostsRecyclerViewAdapter;
+    private final String POST_TYPE = "Memes";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -88,13 +89,13 @@ public class memeFragment extends Fragment implements GetPostList.OnListAvailabl
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = view.findViewById(R.id.meme_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mPostsRecyclerViewAdapter = new PostsRecyclerViewAdapter(mPosts,R.layout.post,getContext());
+        mPostsRecyclerViewAdapter = new PostsRecyclerViewAdapter(mPosts,R.layout.post,getContext(),POST_TYPE);
         mRecyclerView.setAdapter(mPostsRecyclerViewAdapter);
 
 //        GetPostList getPostList = new GetPostList(this);
 //        getPostList.execute("http://alpha-meme-maker.herokuapp.com/");
 
-        GetDataBasePosts getDataBasePosts = new GetDataBasePosts(getContext(),this);
+        GetDataBasePosts getDataBasePosts = new GetDataBasePosts(getContext(),this,POST_TYPE);
         getDataBasePosts.getPosts();
     }
 

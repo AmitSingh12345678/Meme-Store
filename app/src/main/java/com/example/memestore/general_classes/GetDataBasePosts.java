@@ -20,11 +20,13 @@ public class GetDataBasePosts {
     private GetPostList.OnListAvailable mCallback;
     private DatabaseReference mDatabaseRef;
     private Context mContext;
+    private String databasePath;
 
-    public GetDataBasePosts(Context context, GetPostList.OnListAvailable callback){
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Memes");
+    public GetDataBasePosts(Context context, GetPostList.OnListAvailable callback,String databasePath){
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference(databasePath);
         mContext = context;
         mCallback = callback;
+        this.databasePath = databasePath;
     }
 
     public void getPosts(){
