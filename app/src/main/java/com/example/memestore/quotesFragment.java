@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
  * Use the {@link quotesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class quotesFragment extends Fragment implements GetPostList.OnListAvailable {
+public class quotesFragment extends Fragment implements GetPostList.OnListAvailable, SwipeRefreshLayout.OnRefreshListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +37,7 @@ public class quotesFragment extends Fragment implements GetPostList.OnListAvaila
     private ArrayList<Post> mPosts;
     private final String POST_TYPE = "Quotes";
     private static final String TAG = "quotesFragment";
+    private SwipeRefreshLayout quotesRefreshLayout;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -83,6 +85,8 @@ public class quotesFragment extends Fragment implements GetPostList.OnListAvaila
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = view.findViewById(R.id.quotes_list);
+        quotesRefreshLayout = view.findViewById(R.id.post_refresh);
+        quotesRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mPostsRecyclerViewAdapter = new PostsRecyclerViewAdapter(mPosts,R.layout.post,getContext(),POST_TYPE);
         mRecyclerView.setAdapter(mPostsRecyclerViewAdapter);
@@ -101,5 +105,16 @@ public class quotesFragment extends Fragment implements GetPostList.OnListAvaila
             mPosts = posts;
             mPostsRecyclerViewAdapter.loadData(mPosts);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        updatePosts();
+        quotesRefreshLayout.setRefreshing(false);
+    }
+
+    private void updatePosts(){
+        GetDataBasePosts getNewDataBasePosts = new GetDataBasePosts(getContext(),this,POST_TYPE);
+        getNewDataBasePosts.getPosts();
     }
 }

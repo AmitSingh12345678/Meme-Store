@@ -1,6 +1,5 @@
 package com.example.memestore;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.memestore.general_classes.GetDataBasePosts;
 import com.example.memestore.general_classes.GetPostList;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * Use the {@link memeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class memeFragment extends Fragment implements GetPostList.OnListAvailable {
+public class memeFragment extends Fragment implements GetPostList.OnListAvailable, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "memeFragment";
     // TODO: Rename parameter arguments, choose names that match
@@ -38,6 +38,7 @@ public class memeFragment extends Fragment implements GetPostList.OnListAvailabl
     private ArrayList<Post> mPosts = null;
     private PostsRecyclerViewAdapter mPostsRecyclerViewAdapter;
     private final String POST_TYPE = "Memes";
+    private SwipeRefreshLayout memeRefreshLayout;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -88,6 +89,8 @@ public class memeFragment extends Fragment implements GetPostList.OnListAvailabl
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = view.findViewById(R.id.meme_recycler_view);
+        memeRefreshLayout = view.findViewById(R.id.post_refresh);
+        memeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mPostsRecyclerViewAdapter = new PostsRecyclerViewAdapter(mPosts,R.layout.post,getContext(),POST_TYPE);
         mRecyclerView.setAdapter(mPostsRecyclerViewAdapter);
@@ -109,5 +112,16 @@ public class memeFragment extends Fragment implements GetPostList.OnListAvailabl
             mPosts = posts;
             mPostsRecyclerViewAdapter.loadData(mPosts);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        updatePosts();
+        memeRefreshLayout.setRefreshing(false);
+    }
+
+    private void updatePosts(){
+        GetDataBasePosts getNewDataBasePosts = new GetDataBasePosts(getContext(),this,POST_TYPE);
+        getNewDataBasePosts.getPosts();
     }
 }

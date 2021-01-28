@@ -5,9 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".factsFragment">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/post_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/facts_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>
