@@ -38,8 +38,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.util.Arrays;
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     DrawerLayout drawerLayout;
@@ -50,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private final int PICK_USER_IMAGE_REQUEST = 2;
     private ImageView userImage;
     private TextView userName;
+    private int tabIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +64,27 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+        tabIndex = tabs.getSelectedTabPosition();
         FloatingActionButton fab = findViewById(R.id.fab);
         setUpToolbar();
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tabIndex = tab.getPosition();
+                Log.d(TAG, "onTabSelected: Tab selected with index: " + tabIndex);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         navigationView=findViewById(R.id.navigation_menu);
         userImage = navigationView.getHeaderView(0).findViewById(R.id.userImage);
         userName=navigationView.getHeaderView(0).findViewById(R.id.userName);
@@ -135,6 +153,22 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "onActivityResult: Successfully picked an image with URI: " + data.getData());
                     Intent intent = new Intent(MainActivity.this,UploadPostActivity.class);
                     intent.putExtra("imageUri",data.getData().toString());
+                    String postDatabasePath = null;
+
+                    switch(tabIndex){
+                        case 0:
+                            postDatabasePath = "Memes";
+                            break;
+
+                        case 1:
+                            postDatabasePath = "Quotes";
+                            break;
+
+                        case 2:
+                            postDatabasePath = "Facts";
+                            break;
+                    }
+                    intent.putExtra("PATH",postDatabasePath);
                     startActivity(intent);
                     break;
 
