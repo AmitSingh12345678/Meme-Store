@@ -28,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,16 +52,22 @@ public class MainActivity extends AppCompatActivity {
     private int tabIndex;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkLoginStatus();
 
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        final ViewPager viewPager = findViewById(R.id.view_pager);
+        ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
@@ -100,27 +107,16 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                Fragment fragment;
-//                switch (item.getItemId()){
-//                    case R.id.memes:
-//                        fragment=new memeFragment(MainActivity.this);
-//                        break;
-//                    case R.id.facts:
-//                        fragment=new factsFragment();
-//                        break;
-//                    case R.id.quotes:
-//                        fragment=new quotesFragment();
-//                        break;
-//                    default:
-//                        fragment=null;
-//                        // do nothing
-//                }
-//                if(fragment!=null){
-//                   MainActivity.this.getSupportFragmentManager().beginTransaction()
-//                            .replace(, fragment, "findThisFragment")
-//                            .addToBackStack(null)
-//                            .commit();
-//                }
+                switch (item.getItemId()){
+                    case R.id.logout:
+                        FirebaseAuth.getInstance().signOut();
+                        Log.d(TAG, "onNavigationItemSelected: User signed out!");
+                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                        startActivity(intent);
+                        break;
+
+                    default:
+                }
 
                 return true;
             }
@@ -259,5 +255,16 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,error.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void checkLoginStatus(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser == null){
+            Log.d(TAG, "User has to log in");
+            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(intent);
+        }
+        else
+            Log.d(TAG, "checkLoginStatus: User already logged in: " + currentUser.getUid());
     }
 }
