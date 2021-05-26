@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        final ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
@@ -100,9 +100,27 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    default:
-                }
+//                Fragment fragment;
+//                switch (item.getItemId()){
+//                    case R.id.memes:
+//                        fragment=new memeFragment(MainActivity.this);
+//                        break;
+//                    case R.id.facts:
+//                        fragment=new factsFragment();
+//                        break;
+//                    case R.id.quotes:
+//                        fragment=new quotesFragment();
+//                        break;
+//                    default:
+//                        fragment=null;
+//                        // do nothing
+//                }
+//                if(fragment!=null){
+//                   MainActivity.this.getSupportFragmentManager().beginTransaction()
+//                            .replace(, fragment, "findThisFragment")
+//                            .addToBackStack(null)
+//                            .commit();
+//                }
 
                 return true;
             }
