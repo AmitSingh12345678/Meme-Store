@@ -18,6 +18,7 @@
         <activity android:name=".UploadPostActivity"></activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" >
+
         </activity>
         <activity
             android:name=".MainActivity"

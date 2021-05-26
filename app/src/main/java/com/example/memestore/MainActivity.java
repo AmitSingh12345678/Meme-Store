@@ -28,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,10 +52,16 @@ public class MainActivity extends AppCompatActivity {
     private int tabIndex;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkLoginStatus();
 
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
@@ -101,6 +108,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
+                    case R.id.logout:
+                        FirebaseAuth.getInstance().signOut();
+                        Log.d(TAG, "onNavigationItemSelected: User signed out!");
+                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                        startActivity(intent);
+                        break;
+
                     default:
                 }
 
@@ -241,5 +255,16 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,error.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void checkLoginStatus(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser == null){
+            Log.d(TAG, "User has to log in");
+            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(intent);
+        }
+        else
+            Log.d(TAG, "checkLoginStatus: User already logged in: " + currentUser.getUid());
     }
 }
