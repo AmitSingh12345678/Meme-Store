@@ -22,6 +22,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.memestore.general_classes.User;
 import com.example.memestore.ui.main.SectionsPagerAdapter;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -50,9 +52,12 @@ public class MainActivity extends AppCompatActivity {
     private ImageView userImage;
     private TextView userName;
     private int tabIndex;
+    private boolean LoginStatus=false;
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "onStart: Called");
+
         super.onStart();
     }
 
@@ -60,11 +65,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "onCreate: Called");
 
-        checkLoginStatus();
+
 
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+
+
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -74,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         tabIndex = tabs.getSelectedTabPosition();
         FloatingActionButton fab = findViewById(R.id.fab);
         setUpToolbar();
+
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -102,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         addEventListenerToUserDetails();
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -127,6 +138,10 @@ public class MainActivity extends AppCompatActivity {
                 openPhotoPicker(PICK_IMAGE_REQUEST);
             }
         });
+
+        // Checking whether user is logged in or not
+        checkLoginStatus();
+//        if(LoginStatus==false) return;
     }
 
     private void setUpToolbar() {
@@ -257,14 +272,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void checkLoginStatus(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser == null){
-            Log.d(TAG, "User has to log in");
-            Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-            startActivity(intent);
-        }
-        else
-            Log.d(TAG, "checkLoginStatus: User already logged in: " + currentUser.getUid());
+    private void checkLoginStatus() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+            if (currentUser != null || account!=null) {
+                Log.d(TAG, "checkLoginStatus: User already logged in: ");
+                LoginStatus= true;
+
+            } else{
+                Log.d(TAG, "User has to log in");
+                LoginStatus= false;
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        LoginStatus= false;
     }
 }
