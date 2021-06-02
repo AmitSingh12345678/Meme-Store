@@ -67,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Called");
 
-
+// Checking whether user is logged in or not
+        checkLoginStatus();
+//        if(LoginStatus==false) return;
 
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
@@ -139,9 +141,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Checking whether user is logged in or not
-        checkLoginStatus();
-//        if(LoginStatus==false) return;
+
     }
 
     private void setUpToolbar() {
