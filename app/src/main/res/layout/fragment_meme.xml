@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".memeFragment">
+    tools:context=".memeFragment"
+    android:background="#1F294A">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/post_refresh"
@@ -15,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
-        android:background="#F3ECEC" />
+        android:background="#1F294A" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>
