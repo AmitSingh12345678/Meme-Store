@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView userName;
     private int tabIndex;
     private boolean LoginStatus=false;
+    private FrameLayout frameLayout;
+    private BottomAppBar bottomAppBar;
+    private BottomNavigationView bottomNavigationView;
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -102,15 +105,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Called");
 
-        BottomAppBar bottomAppBar = findViewById(R.id.bottomAppBar);
+        bottomAppBar = findViewById(R.id.bottomAppBar);
         int bottomAppBarHeight = bottomAppBar.getHeight();
-        FrameLayout frameLayout = findViewById(R.id.fragment_container);
+        frameLayout = findViewById(R.id.fragment_container);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) frameLayout.getLayoutParams();
         params.setMargins(0,0,0,bottomAppBarHeight);
         frameLayout.setLayoutParams(params);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+        bottomNavigationView.setBackground(null);
+
+        //Disabling the touch action on placeholder in the bottom navigation view at the middle
+        bottomNavigationView.getMenu().getItem(2).setEnabled(false);
 
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
