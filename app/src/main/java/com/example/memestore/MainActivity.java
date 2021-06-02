@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.memestore.general_classes.User;
@@ -26,6 +29,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -53,6 +58,37 @@ public class MainActivity extends AppCompatActivity {
     private TextView userName;
     private int tabIndex;
     private boolean LoginStatus=false;
+    private FrameLayout frameLayout;
+    private BottomAppBar bottomAppBar;
+    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+            Fragment selectedFragment = null;
+            switch(item.getItemId())
+            {
+                case R.id.miHome:
+                    selectedFragment = new memeFragment(getApplicationContext());
+                    break;
+
+                case R.id.miSettings:
+                    selectedFragment = new SettingsFragment();
+                    break;
+
+                case R.id.miProfile:
+                    selectedFragment = new ProfileFragment();
+                    break;
+
+                case R.id.miSearch:
+                    selectedFragment = new SearchFragment();
+                    break;
+            }
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
+            return true;
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -61,79 +97,93 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Called");
 
-// Checking whether user is logged in or not
-        checkLoginStatus();
-//        if(LoginStatus==false) return;
+        bottomAppBar = findViewById(R.id.bottomAppBar);
+        int bottomAppBarHeight = bottomAppBar.getHeight();
+        frameLayout = findViewById(R.id.fragment_container);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) frameLayout.getLayoutParams();
+        params.setMargins(0,0,0,bottomAppBarHeight);
+        frameLayout.setLayoutParams(params);
+
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+        bottomNavigationView.setBackground(null);
+
+        //Disabling the touch action on placeholder in the bottom navigation view at the middle
+        bottomNavigationView.getMenu().getItem(2).setEnabled(false);
 
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
 
+        checkLoginStatus();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new memeFragment(getApplicationContext())).commit();
 
-
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-        tabIndex = tabs.getSelectedTabPosition();
+//        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+//        ViewPager viewPager = findViewById(R.id.view_pager);
+//        viewPager.setAdapter(sectionsPagerAdapter);
+//        TabLayout tabs = findViewById(R.id.tabs);
+//        tabs.setupWithViewPager(viewPager);
+//        tabIndex = tabs.getSelectedTabPosition();
         FloatingActionButton fab = findViewById(R.id.fab);
-        setUpToolbar();
+//        setUpToolbar();
 
 
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                tabIndex = tab.getPosition();
-                Log.d(TAG, "onTabSelected: Tab selected with index: " + tabIndex);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        navigationView=findViewById(R.id.navigation_menu);
-        userImage = navigationView.getHeaderView(0).findViewById(R.id.userImage);
-        userName=navigationView.getHeaderView(0).findViewById(R.id.userName);
-        userImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openPhotoPicker(PICK_USER_IMAGE_REQUEST);
-            }
-        });
+//        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//                tabIndex = tab.getPosition();
+//                Log.d(TAG, "onTabSelected: Tab selected with index: " + tabIndex);
+//            }
+//
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {
+//
+//            }
+//
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {
+//
+//            }
+//        });
+//        navigationView=findViewById(R.id.navigation_menu);
+//        userImage = navigationView.getHeaderView(0).findViewById(R.id.userImage);
+//        userName=navigationView.getHeaderView(0).findViewById(R.id.userName);
+//        userImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openPhotoPicker(PICK_USER_IMAGE_REQUEST);
+//            }
+//        });
 
 
 
         addEventListenerToUserDetails();
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.logout:
-                        FirebaseAuth.getInstance().signOut();
-                        Log.d(TAG, "onNavigationItemSelected: User signed out!");
-                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                        startActivity(intent);
-                        break;
-
-                    default:
-                }
-
-                return true;
-            }
-        });
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch (item.getItemId()){
+//                    case R.id.logout:
+//                        FirebaseAuth.getInstance().signOut();
+//                        Log.d(TAG, "onNavigationItemSelected: User signed out!");
+//                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+//                        startActivity(intent);
+//                        break;
+//
+//                    default:
+//                }
+//
+//                return true;
+//            }
+//        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,11 +191,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        // Checking whether user is logged in or not
+//        if(LoginStatus==false) return;
     }
 
     private void setUpToolbar() {
-        drawerLayout = findViewById(R.id.drawerLayout);
+//        drawerLayout = findViewById(R.id.drawerLayout);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);//we have to import androidx.appcompat.widget.Toolbar,as AS import old one
         /**
@@ -254,8 +305,8 @@ public class MainActivity extends AppCompatActivity {
                         User user = snapshot.getValue(User.class);
                         Log.d(TAG, "onDataChange: Post Author Name: " + user.getUserName());
                         Log.d(TAG, "onDataChange: Profile Pic Url: "+user.getUserProfilePic());
-                        Picasso.get().load(user.getUserProfilePic()).into(userImage);
-                        userName.setText(user.getUserName());
+//                        Picasso.get().load(user.getUserProfilePic()).into(userImage);
+//                        userName.setText(user.getUserName());
                     }
 
                     @Override
