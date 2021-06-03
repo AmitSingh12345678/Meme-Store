@@ -29,6 +29,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,7 +50,8 @@ import com.squareup.picasso.Picasso;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     DrawerLayout drawerLayout;
-    Toolbar toolbar;
+//    Toolbar toolbar;
+    MaterialToolbar toolbar;
     ActionBarDrawerToggle actionBarDrawerToggle;
     NavigationView navigationView;
     private final int PICK_IMAGE_REQUEST = 1;
@@ -106,10 +108,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Called");
 
         bottomAppBar = findViewById(R.id.bottomAppBar);
+        setUpToolbar();
         int bottomAppBarHeight = bottomAppBar.getHeight();
+        int toolBarHeight = toolbar.getHeight();
         frameLayout = findViewById(R.id.fragment_container);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) frameLayout.getLayoutParams();
-        params.setMargins(0,0,0,bottomAppBarHeight);
+        params.setMargins(0,60,0,bottomAppBarHeight);
         frameLayout.setLayoutParams(params);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -119,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Disabling the touch action on placeholder in the bottom navigation view at the middle
         bottomNavigationView.getMenu().getItem(2).setEnabled(false);
+
+
 
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
@@ -133,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
 //        tabs.setupWithViewPager(viewPager);
 //        tabIndex = tabs.getSelectedTabPosition();
         FloatingActionButton fab = findViewById(R.id.fab);
-//        setUpToolbar();
 
 
 //        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -153,37 +158,37 @@ public class MainActivity extends AppCompatActivity {
 //
 //            }
 //        });
-//        navigationView=findViewById(R.id.navigation_menu);
-//        userImage = navigationView.getHeaderView(0).findViewById(R.id.userImage);
-//        userName=navigationView.getHeaderView(0).findViewById(R.id.userName);
-//        userImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openPhotoPicker(PICK_USER_IMAGE_REQUEST);
-//            }
-//        });
+        navigationView=findViewById(R.id.navigation_view);
+        userImage = navigationView.getHeaderView(0).findViewById(R.id.userImage);
+        userName=navigationView.getHeaderView(0).findViewById(R.id.userName);
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPhotoPicker(PICK_USER_IMAGE_REQUEST);
+            }
+        });
 
 
 
         addEventListenerToUserDetails();
 
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()){
-//                    case R.id.logout:
-//                        FirebaseAuth.getInstance().signOut();
-//                        Log.d(TAG, "onNavigationItemSelected: User signed out!");
-//                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-//                        startActivity(intent);
-//                        break;
-//
-//                    default:
-//                }
-//
-//                return true;
-//            }
-//        });
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.logout:
+                        FirebaseAuth.getInstance().signOut();
+                        Log.d(TAG, "onNavigationItemSelected: User signed out!");
+                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                        startActivity(intent);
+                        break;
+
+                    default:
+                }
+
+                return true;
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -196,9 +201,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpToolbar() {
-//        drawerLayout = findViewById(R.id.drawerLayout);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);//we have to import androidx.appcompat.widget.Toolbar,as AS import old one
+        drawerLayout = findViewById(R.id.drawerLayout);
+        toolbar = findViewById(R.id.topAppBar);
+//        setSupportActionBar(toolbar);//we have to import androidx.appcompat.widget.Toolbar,as AS import old one
         /**
          * We use this as in style.xml,we set NoActionBar.It set this toolbar as actionbar.
          * Press ctrl+Q for more information.
@@ -305,8 +310,8 @@ public class MainActivity extends AppCompatActivity {
                         User user = snapshot.getValue(User.class);
                         Log.d(TAG, "onDataChange: Post Author Name: " + user.getUserName());
                         Log.d(TAG, "onDataChange: Profile Pic Url: "+user.getUserProfilePic());
-//                        Picasso.get().load(user.getUserProfilePic()).into(userImage);
-//                        userName.setText(user.getUserName());
+                        Picasso.get().load(user.getUserProfilePic()).into(userImage);
+                        userName.setText(user.getUserName());
                     }
 
                     @Override

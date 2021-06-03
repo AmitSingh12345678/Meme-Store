@@ -16,4 +16,5 @@
     <string name="upload_post_caption_placeholder">Add a caption</string>
     <string name="post_btn_title">Post</string>
     <string name="userImage">User Profile Pic</string>
+    <string name="page_title">Meme Store</string>
 </resources>
