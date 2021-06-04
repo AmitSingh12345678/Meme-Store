@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/send"
-        android:icon="@drawable/ic_send_white"
+        android:icon="@drawable/ic_facebook_messenger"
         android:title="Item"
         app:showAsAction="always" />
 </menu>

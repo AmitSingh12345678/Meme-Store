@@ -98,13 +98,15 @@
                     app:layout_constraintBottom_toTopOf="@id/caption"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:background="#121212">
 
                     <ImageView
                         android:id="@+id/post_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="400dp"
+                        android:layout_height="400dp"
                         android:adjustViewBounds="true"
+                        android:layout_gravity="center"
                         android:contentDescription="@string/post_image"
                         android:scaleType="centerCrop"
                         tools:srcCompat="@tools:sample/backgrounds/scenic" />
@@ -174,7 +176,7 @@
                         android:layout_weight="1"
                         android:backgroundTint="#1F294A"
                         android:contentDescription="@string/send_btn"
-                        app:srcCompat="@drawable/send" />
+                        app:srcCompat="@drawable/ic_ios_share_black_24dp" />
 
                     <ImageButton
                         android:id="@+id/download_btn"
@@ -184,7 +186,7 @@
                         android:backgroundTint="#1F294A"
                         android:contentDescription="@string/send_btn"
                         android:tint="#040404"
-                        app:srcCompat="@drawable/save" />
+                        app:srcCompat="@drawable/ic_round_save_alt_24" />
 
                 </LinearLayout>
 
