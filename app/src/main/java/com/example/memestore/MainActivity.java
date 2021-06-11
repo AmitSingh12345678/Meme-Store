@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,14 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.memestore.general_classes.User;
-import com.example.memestore.ui.main.SectionsPagerAdapter;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,7 +30,6 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -109,19 +104,23 @@ public class MainActivity extends AppCompatActivity {
 
         bottomAppBar = findViewById(R.id.bottomAppBar);
         setUpToolbar();
+
+        // to give bottom margin to frame_layout
+        /*
         int bottomAppBarHeight = bottomAppBar.getHeight();
         int toolBarHeight = toolbar.getHeight();
         frameLayout = findViewById(R.id.fragment_container);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) frameLayout.getLayoutParams();
         params.setMargins(0,60,0,bottomAppBarHeight);
         frameLayout.setLayoutParams(params);
+         */
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
         bottomNavigationView.setBackground(null);
 
-        //Disabling the touch action on placeholder in the bottom navigation view at the middle
+        //Disabling the touch action on middle item(placeholder) in the bottom navigation view
         bottomNavigationView.getMenu().getItem(2).setEnabled(false);
 
 

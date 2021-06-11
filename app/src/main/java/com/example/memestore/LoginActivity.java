@@ -150,6 +150,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    // TODO: 11-06-2021 After sign in check whether user is already existed with email id or not. If already existed user,then donot update username and photos.
     private void updateUI(FirebaseUser fuser) {
         Log.d(TAG, "updateUI: Called");
         GoogleSignInAccount account=GoogleSignIn.getLastSignedInAccount(getApplicationContext());

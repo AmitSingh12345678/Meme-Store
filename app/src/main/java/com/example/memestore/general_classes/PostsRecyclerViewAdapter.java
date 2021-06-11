@@ -34,7 +34,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -218,9 +217,11 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
             File file=new File(dir,System.currentTimeMillis()+".jpg");
             try {
                 outputStream=new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                Log.d(TAG, "saveImage: "+e.getMessage());
             }
+            Log.d(TAG, "saveImage: "+bitmap+">>>"+outputStream);
             if(bitmap!=null && outputStream!=null) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 Toast.makeText(mContext, "Image Saved!!", Toast.LENGTH_SHORT).show();
