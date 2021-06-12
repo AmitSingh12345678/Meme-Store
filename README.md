@@ -10,9 +10,9 @@ Users can authenticate themselves via their E-mail, google or facebook accounts.
 # Snapshots
 
 <pre>
-<img src="https://github.com/AmitSingh12345678/Meme-Store/blob/master/meme-store%20screenshots/Screenshot_2021_0611_110248.jpg" height="700" width = "380">        <img src = "https://github.com/AmitSingh12345678/Meme-Store/blob/master/meme-store%20screenshots/Screenshot_2021_0611_123035%5B1%5D.jpg" height = "700" width = "380">
+<img src="https://github.com/AmitSingh12345678/Meme-Store/blob/master/meme-store%20screenshots/Screenshot_2021_0611_110248.jpg" height="300" width = "180">       <img src = "https://github.com/AmitSingh12345678/Meme-Store/blob/master/meme-store%20screenshots/Screenshot_2021_0611_123035%5B1%5D.jpg" height = "300" width = "180">
 
-<img src = "https://github.com/AmitSingh12345678/Meme-Store/blob/master/meme-store%20screenshots/Screenshot_2021_0611_123501%5B1%5D.jpg" height = "700" width = "380">        <img src = "https://github.com/AmitSingh12345678/Meme-Store/blob/master/meme-store%20screenshots/Screenshot_2021_0611_122118%5B1%5D.jpg" height = "700" width = "380">
+<img src = "https://github.com/AmitSingh12345678/Meme-Store/blob/master/meme-store%20screenshots/Screenshot_2021_0611_123501%5B1%5D.jpg" height = "300" width = "180">       <img src = "https://github.com/AmitSingh12345678/Meme-Store/blob/master/meme-store%20screenshots/Screenshot_2021_0611_122118%5B1%5D.jpg" height = "300" width="180">
 </pre>
 
 
