@@ -78,7 +78,7 @@ public class GetRawData extends AsyncTask<String, Void, String> {
         }catch(IOException e){
             Log.d(TAG, "downloadData: Failed with an IO Exception: " + e.getMessage());
         }catch(SecurityException e){
-            Log.d(TAG, "downloadData: App permissions missing: " + e.getMessage());
+                Log.d(TAG, "downloadData: App permissions missing: " + e.getMessage());
         }finally{
             try{
                 reader.close();

@@ -148,6 +148,7 @@
                         android:layout_weight="1"
                         android:backgroundTint="#1F294A"
                         android:contentDescription="@string/like_btn"
+                        android:tint="@color/colorWhite"
                         app:srcCompat="@drawable/fav_outlined" />
 
                     <TextView
@@ -176,7 +177,7 @@
                         android:layout_weight="1"
                         android:backgroundTint="#1F294A"
                         android:contentDescription="@string/send_btn"
-                        app:srcCompat="@drawable/ic_ios_share_black_24dp" />
+                        app:srcCompat="@drawable/ic_ios_share_white_24dp" />
 
                     <ImageButton
                         android:id="@+id/download_btn"
@@ -185,7 +186,7 @@
                         android:layout_weight="1"
                         android:backgroundTint="#1F294A"
                         android:contentDescription="@string/send_btn"
-                        android:tint="#040404"
+                        android:tint="@color/colorWhite"
                         app:srcCompat="@drawable/ic_round_save_alt_24" />
 
                 </LinearLayout>
