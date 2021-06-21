@@ -1,6 +1,7 @@
 package com.example.memestore;
 
 import android.content.ContentResolver;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,8 +54,10 @@ public class UploadPostActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorSurface));
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         post_image = findViewById(R.id.selectedPic);
@@ -90,6 +93,7 @@ public class UploadPostActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -106,6 +110,7 @@ public class UploadPostActivity extends AppCompatActivity {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
+
     private void uploadPost(String postImageUri) {
         if(postImageUri!=null){
             String caption=post_caption.getText().toString();

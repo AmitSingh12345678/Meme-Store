@@ -6,8 +6,8 @@
         android:icon="@drawable/ic_home" />
 
     <item android:id="@+id/miSearch"
-        android:title="Search"
-        android:icon="@drawable/ic_search" />
+        android:title="Gallery"
+        android:icon="@drawable/ic_baseline_grid_view_24" />
 
     <item android:id="@+id/placeholder"
         android:title="" />
