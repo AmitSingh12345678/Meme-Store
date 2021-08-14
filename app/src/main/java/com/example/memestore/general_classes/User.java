@@ -11,10 +11,8 @@ public class User {
 
     public ArrayList<String> getPosts() {
         ArrayList<String> temp = new ArrayList<>();
-        for (String postId: posts.keySet()
-             ) {
-            temp.add(postId);
-        }
+        if(posts!=null)
+        temp.addAll(posts.keySet());
 
         return temp;
     }
@@ -25,10 +23,8 @@ public class User {
 
     public ArrayList<String> getLikedPosts() {
         ArrayList<String> temp = new ArrayList<>();
-        for (String postId: likedPosts.keySet()
-        ) {
-            temp.add(postId);
-        }
+        if(likedPosts!=null)
+        temp.addAll(likedPosts.keySet());
 
         return temp;
     }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorSurface"
-    style="@style/AppTheme">
+    app:layoutDescription="@xml/fragment_profile_scene">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
@@ -152,9 +153,9 @@
             android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/yourPosts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/yourPosts"
                 android:layout_marginBottom="2dp"
                 android:background="@color/colorSurface"
                 android:fontFamily="@font/roboto"
@@ -169,9 +170,9 @@
             android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/likedPosts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/likedPosts"
                 android:background="@color/colorSurface"
                 android:fontFamily="@font/roboto"
                 android:text="Liked Posts" />
@@ -188,4 +189,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

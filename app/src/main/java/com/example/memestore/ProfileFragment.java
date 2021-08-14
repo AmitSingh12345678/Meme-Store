@@ -12,13 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.memestore.general_classes.MemeGalleryAdapter;
 import com.example.memestore.general_classes.Post;
 import com.example.memestore.general_classes.User;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -96,7 +95,8 @@ public class ProfileFragment extends Fragment {
                 userPostList = getPostList(currentUser.getPosts());
                 likedPostList = getPostList(currentUser.getLikedPosts());
                 selectedFragment = new userPostFragment(userPostList);
-                getActivity().getSupportFragmentManager().beginTransaction().
+                FragmentManager fragmentManager=requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().
                         replace(R.id.fragment_container_profile,selectedFragment).commit();
             }
 
