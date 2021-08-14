@@ -41,6 +41,7 @@ public class ProfileFragment extends Fragment {
     private MemeGalleryAdapter mAdapter;
     private ArrayList<Post> userPostList;
     private ArrayList<Post> likedPostList;
+    private FragmentManager fragmentManager=null;
     FirebaseAuth auth;
     @Nullable
     @Override
@@ -55,6 +56,9 @@ public class ProfileFragment extends Fragment {
         likedPosts=view.findViewById(R.id.likedPosts);
         userImageView = view.findViewById(R.id.userImage);
         userNameView = view.findViewById(R.id.profile_username);
+
+        fragmentManager=requireActivity().getSupportFragmentManager();
+
         yourPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -95,7 +99,7 @@ public class ProfileFragment extends Fragment {
                 userPostList = getPostList(currentUser.getPosts());
                 likedPostList = getPostList(currentUser.getLikedPosts());
                 selectedFragment = new userPostFragment(userPostList);
-                FragmentManager fragmentManager=requireActivity().getSupportFragmentManager();
+                if(fragmentManager!=null)
                 fragmentManager.beginTransaction().
                         replace(R.id.fragment_container_profile,selectedFragment).commit();
             }
