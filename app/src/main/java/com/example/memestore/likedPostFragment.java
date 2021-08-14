@@ -5,7 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.memestore.general_classes.MemeGalleryAdapter;
+import com.example.memestore.general_classes.Post;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,9 +31,16 @@ public class likedPostFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ArrayList<Post> postList;
+    private RecyclerView postListView;
+    private MemeGalleryAdapter mAdapter;
 
     public likedPostFragment() {
         // Required empty public constructor
+    }
+
+    public likedPostFragment(ArrayList<Post> posts){
+        postList = posts;
     }
 
     /**
@@ -59,5 +75,14 @@ public class likedPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_liked_post, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        postListView = view.findViewById(R.id.user_liked_posts_view);
+        mAdapter = new MemeGalleryAdapter(postList,getContext(),R.layout.gallery_image_layout);
+        postListView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        postListView.setAdapter(mAdapter);
     }
 }

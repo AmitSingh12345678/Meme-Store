@@ -113,9 +113,15 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
                if(v.getTag().equals("like")){
                    FirebaseDatabase.getInstance().getReference(postType).child(requiredPost.getPostId())
                            .child("likes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(true);
+
+                   FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser()
+                           .getUid()).child("likedPosts").child(requiredPost.getPostId()).setValue(true);
                }else{
                    FirebaseDatabase.getInstance().getReference(postType).child(requiredPost.getPostId())
                            .child("likes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeValue();
+
+                   FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser()
+                           .getUid()).child("likedPosts").child(requiredPost.getPostId()).removeValue();
                }
             }
         });

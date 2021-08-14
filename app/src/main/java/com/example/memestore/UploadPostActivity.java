@@ -113,9 +113,9 @@ public class UploadPostActivity extends AppCompatActivity {
 
     private void uploadPost(String postImageUri) {
         if(postImageUri!=null){
-            String caption=post_caption.getText().toString();
-            Uri imageUri=Uri.parse(postImageUri);
-            final String key= UUID.randomUUID().toString();
+            String caption = post_caption.getText().toString();
+            Uri imageUri = Uri.parse(postImageUri);
+            final String key = UUID.randomUUID().toString();
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm yyyy.MM.dd");
             String currentDateandTime = sdf.format(new Date());
             mDatabaseRef.child(key).child("postUploadDate").setValue(currentDateandTime);
@@ -123,7 +123,7 @@ public class UploadPostActivity extends AppCompatActivity {
             mDatabaseRef.child(key).child("postName").setValue(caption);
 
             //Setting the post author name from the user UID
-            String authorUid = auth.getCurrentUser().getUid();
+            final String authorUid = auth.getCurrentUser().getUid();
             mDatabaseRef.child(key).child("userUID").setValue(authorUid);
 
 
@@ -131,7 +131,7 @@ public class UploadPostActivity extends AppCompatActivity {
                     + "." + getFileExtension(imageUri);
             Log.d(TAG, "uploadPost: Key is "+key);
             Log.d(TAG, "uploadPost: Image name is "+imageName);
-            StorageReference postImageRef=mStorageRef.child(key).child(imageName);
+            StorageReference postImageRef = mStorageRef.child(key).child(imageName);
             mUploadTask = postImageRef.putFile(imageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -143,6 +143,8 @@ public class UploadPostActivity extends AppCompatActivity {
                                     String downloadUrl= uri.toString();
                                     Log.d(TAG, "onSuccess: Image Url is "+downloadUrl);
                                     mDatabaseRef.child(key).child("postImageUrl").setValue(downloadUrl);
+                                    DatabaseReference userDataBaseReference = FirebaseDatabase.getInstance().getReference("Users");
+                                    userDataBaseReference.child(authorUid).child("posts").child(key).setValue(true);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
