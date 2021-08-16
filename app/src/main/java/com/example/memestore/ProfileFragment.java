@@ -111,16 +111,18 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public ArrayList<Post> getPostList(ArrayList<String> postId){
+    public ArrayList<Post> getPostList(final ArrayList<String> postId){
 
         DatabaseReference memref = FirebaseDatabase.getInstance().getReference("Memes");
         ArrayList<Post> ans = new ArrayList<>();
         for(int i=0;i<postId.size();i++){
             final ArrayList<Post> finalAns = ans;
+            final int finalI = i;
             memref.child(postId.get(i)).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Post currentPost = snapshot.getValue(Post.class);
+                    currentPost.setPostId(postId.get(finalI));
                     finalAns.add(currentPost);
                 }
 

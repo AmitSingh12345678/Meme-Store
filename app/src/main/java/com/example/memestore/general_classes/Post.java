@@ -1,6 +1,8 @@
 package com.example.memestore.general_classes;
 
-public class Post {
+import java.io.Serializable;
+
+public class Post implements Serializable {
 //    private String postAuthorName = "Meme Bot";
 //    private String postAuthorImageUrl = "https://www.thespruce.com/thmb/kPFArxxQPDx6o4vXjeORPx6HZDc=/2119x1192/smart/filters:no_upscale()/GettyImages-971582964-ee0f28aa66b04fb1a54171fa4bdee7a6.jpg";
     private String userUID;

@@ -39,6 +39,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import static com.example.memestore.general_classes.PostOperations.getLikesCount;
+import static com.example.memestore.general_classes.PostOperations.isPostLiked;
+import static com.example.memestore.general_classes.PostOperations.saveImage;
+
 public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private static final String TAG = "PostsRecyclerViewAdapte";
     private ArrayList<Post> posts = null;
@@ -84,22 +88,14 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
         holder.downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveImage(holder.postImage);
+                saveImage(holder.postImage,mContext);
             }
         });
 
         holder.shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri shareImageUri = saveImage(holder.postImage);
-                Log.d(TAG, "onClick: Got a Uri of image to send: " + shareImageUri);
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, shareImageUri);
-                shareIntent.putExtra(Intent.EXTRA_TEXT,"Shared from MemeStore");
-                shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                shareIntent.setType("*/*");
-                mContext.startActivity(Intent.createChooser(shareIntent,"Share via"));
+                PostOperations.shareImage(holder.postImage,mContext);
             }
         });
 
@@ -110,19 +106,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(v.getTag().equals("like")){
-                   FirebaseDatabase.getInstance().getReference(postType).child(requiredPost.getPostId())
-                           .child("likes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(true);
-
-                   FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser()
-                           .getUid()).child("likedPosts").child(requiredPost.getPostId()).setValue(true);
-               }else{
-                   FirebaseDatabase.getInstance().getReference(postType).child(requiredPost.getPostId())
-                           .child("likes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeValue();
-
-                   FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser()
-                           .getUid()).child("likedPosts").child(requiredPost.getPostId()).removeValue();
-               }
+               PostOperations.likeClicked(v,requiredPost.getPostId());
             }
         });
 
@@ -145,114 +129,5 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolde
         Log.d(TAG, "loadData: Loading new Posts");
         this.posts = posts;
         notifyDataSetChanged();
-    }
-
-    void isPostLiked(final String postId, final ImageButton imageButton){
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(postType)
-                .child(postId).child("likes");
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child(auth.getCurrentUser().getUid()).exists()){
-                    imageButton.setImageResource(R.drawable.fav_filled);
-                    imageButton.setColorFilter(Color.RED);
-                    imageButton.setTag("liked");
-                }else{
-                    imageButton.setImageResource(R.drawable.fav_outlined);
-                    imageButton.setColorFilter(Color.BLACK);
-                    imageButton.setTag("like");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "onCancelled: DataBaseError" + error.getMessage());
-            }
-        });
-    }
-
-    void getLikesCount(final String postId, final TextView likesCountView){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(postType).child(postId).child("likes");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                long likesCount = snapshot.getChildrenCount();
-                String likesString = String.format("%d likes",likesCount);
-
-                if(likesCount == 1 || likesCount == 0){
-                    likesString = String.format("%d like",likesCount);
-                }
-
-                likesCountView.setText(likesString);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "onCancelled: Database error: " + error.getMessage());
-            }
-        });
-    }
-
-    private Uri saveImage(ImageView saveImage){
-        BitmapDrawable bitmapDrawable= (BitmapDrawable) saveImage.getDrawable();
-        Bitmap bitmap=null;
-        if(bitmapDrawable!=null) {
-            bitmap = bitmapDrawable.getBitmap();
-        }else{
-            Log.d(TAG, "onClick: Error!!!!!!!!!!!");
-            return null;
-        }
-
-        //Check condition
-        if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED){
-            //If permission granted
-            File filepath= Environment.getExternalStorageDirectory();
-            File dir=new File(filepath.getAbsolutePath()+"/MemeStore/");
-            Log.d(TAG, "onClick: "+filepath.getAbsolutePath()+"/MemeStore/");
-            if(!dir.exists()){
-                Toast.makeText(mContext,
-                        (dir.mkdirs() ? "Directory has been created" : "Directory not created"),
-                        Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(mContext, "Directory exists", Toast.LENGTH_SHORT).show();
-            }
-            File file=new File(dir,System.currentTimeMillis()+".jpg");
-            try {
-                outputStream=new FileOutputStream(file);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d(TAG, "saveImage: "+e.getMessage());
-            }
-            Log.d(TAG, "saveImage: "+bitmap+">>>"+outputStream);
-            if(bitmap!=null && outputStream!=null) {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                Toast.makeText(mContext, "Image Saved!!", Toast.LENGTH_SHORT).show();
-            }else{
-                Log.d(TAG, "onClick: Error");
-                Toast.makeText(mContext, "Error while downloading image", Toast.LENGTH_SHORT).show();
-            }
-            if(outputStream!=null) {
-                try {
-                    outputStream.flush();
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            file.setReadable(true,false);
-            Uri photoURI = FileProvider.getUriForFile(mContext.getApplicationContext(), BuildConfig.APPLICATION_ID +".provider", file);
-            Log.d(TAG, "saveImage: Photo Uri: " + photoURI);
-            return photoURI;
-        }else{
-            //Request permission
-            Log.d(TAG, "onClick: Permission is not given!!!");
-        }
-
-        return  null;
     }
 }
